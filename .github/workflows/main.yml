@@ -1,0 +1,64 @@
+name: 'Update schedule'
+
+on:
+  schedule:
+    - cron: '0 4,16 * * *'
+  workflow_dispatch:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+jobs:
+  push:
+    runs-on: ${{ matrix.operating-system }}
+    timeout-minutes: 240
+    strategy:
+      matrix:
+        operating-system: [ 'ubuntu-latest' ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run with setup-python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+          update-environment: true
+          cache: 'pipenv'
+      - name: Install pipenv
+        run: pip3 install --user pipenv
+      - name: Install dependecies
+        run: |
+          pipenv lock
+          pipenv --python 3.13 && pipenv install --deploy
+      - name: Update EPG
+        run: pipenv run epg
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          if [[ -f "output/epg.xml" ]]; then
+            git add -f "output/epg.xml"
+          fi
+          if [[ -f "output/epg.gz" ]]; then
+            git add -f "output/epg.gz"
+          fi
+          if ! git diff --staged --quiet; then
+            git reset --soft $(git rev-list --max-parents=0 HEAD)
+            git commit --amend -m "Github Action Auto Updated"
+            git push --force
+          fi
+      
+      - name: Mirror the Github organization repos to Gitee.
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: 'github/mytv-android'    			
+          dst: 'gitee/mytv-android'   
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}  
+          dst_token:  ${{ secrets.GITEE_TOKEN }}  
+          force_update: true
+          static_list: "myEPG"
+          account_type: org   		
+          debug: true
+

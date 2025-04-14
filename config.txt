@@ -1,0 +1,6 @@
+#epg链接，一行一个
+https://epg.27481716.xyz/epg.xml
+https://raw.githubusercontent.com/kuke31/xmlgz/main/all.xml
+http://epg.51zmt.top:8001/e.xml
+https://raw.githubusercontent.com/fanmingming/live/main/e.xml
+https://assets.livednow.com/epg.xml
