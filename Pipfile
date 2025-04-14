@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[scripts]
+epg = "python merge.py"
+
+[dev-packages]
+pyinstaller = "==6.12.0"
+selenium = "==4.29.0"
+
+[packages]
+requests = "==2.32.3"
+bs4 = "==0.0.2"
+tqdm = "==4.67.1"
+async-timeout = "==5.0.1"
+aiohttp = "==3.11.13"
+flask = "==3.1.0"
+opencc-python-reimplemented = "==0.1.7"
+gunicorn = "==23.0.0"
+pillow = "==11.1.0"
+m3u8 = "==6.0.0"
+pytz = "==2025.1"
+pystray = "==0.19.5"
+[requires]
+python_version = "3.13"
